@@ -23,6 +23,9 @@ jobs:
       - name: Build (если используется сборка, например, TypeScript/Babel)
         run: npm run build # Если есть скрипт build в package.json
 
+      #      - name: Run tests (опционально)
+      #        run: npm test # Если есть тесты
+
       # Шаг для настройки SSH-ключа с паролем
       - name: Set up SSH key with passphrase
         run: |
@@ -30,22 +33,26 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # Создаем файл для автоматического ввода пароля
+        # Проверка формата ключа
+          ssh-keygen -l -f ~/.ssh/id_rsa
+
+        # Создаем файл для автоматического ввода пароля
           echo -e "#!/bin/bash\n\necho $SSH_PASSPHRASE" > ~/.ssh/askpass.sh
           chmod +x ~/.ssh/askpass.sh
 
-          # Устанавливаем переменную окружения SSH_ASKPASS
+        # Устанавливаем переменную окружения SSH_ASKPASS
           export SSH_ASKPASS=~/.ssh/askpass.sh
 
-          # Запускаем ssh-agent и добавляем ключ
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
-          # Настройка для игнорирования предупреждений о недоверенных хостах
-          mkdir -p ~/.ssh
-          echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null" > ~/.ssh/config  
+        # Перезапуск ssh-agent (для гарантии, что агент чистый)
+          eval $(ssh-agent -k) # Убиваем старый ssh-agent
+          eval $(ssh-agent -s)  # Запускаем новый ssh-agent
 
-      #      - name: Run tests (опционально)
-      #        run: npm test # Если есть тесты
+        # Добавляем ключ в ssh-agent
+          ssh-add ~/.ssh/id_rsa
+          
+        # Настройка для игнорирования предупреждений о недоверенных хостах
+          mkdir -p ~/.ssh
+          echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null" > ~/.ssh/config
 
       # Деплой (зависит от вашего сервера)
       - name: Deploy to server via SSH
@@ -57,8 +64,5 @@ jobs:
           script: |
             cd dezoserver
             git pull origin main
-#            npm install --production
-#            pm2 restart my-app # Если используете PM2
-
-
-
+            # npm install --production # Если нужно установить зависимости
+            # pm2 restart my-app # Если используете PM2
