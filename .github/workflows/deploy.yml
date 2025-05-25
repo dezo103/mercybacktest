@@ -33,8 +33,9 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            cd /var/www/my-express-app
+            cd dezoserver
             git pull origin main
-            npm install --production
-            pm2 restart my-app # Если используете PM2
+#            npm install --production
+#            pm2 restart my-app # Если используете PM2
