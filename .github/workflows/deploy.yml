@@ -33,17 +33,17 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # Создаем файл для автоматического ввода пароля
+        # Создаем файл для автоматического ввода пароля
           echo -e "#!/bin/bash\n\necho $SSH_PASSPHRASE" > ~/.ssh/askpass.sh
           chmod +x ~/.ssh/askpass.sh
 
-          # Устанавливаем переменную окружения SSH_ASKPASS
+        # Устанавливаем переменную окружения SSH_ASKPASS
           export SSH_ASKPASS=~/.ssh/askpass.sh
 
-          # Запускаем ssh-agent и добавляем ключ
+        # Запускаем ssh-agent и добавляем ключ
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-          # Настройка для игнорирования предупреждений о недоверенных хостах
+        # Настройка для игнорирования предупреждений о недоверенных хостах
           mkdir -p ~/.ssh
           echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null" > ~/.ssh/config
 
