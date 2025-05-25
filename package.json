@@ -1,0 +1,37 @@
+{
+  "name": "mercy_by_test_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "server": "nodemon --exec ts-node src/index.ts",
+    "server-add": "node dist/index.js",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typeorm": "ts-node ./node_modules/typeorm/cli -d ./src/data-source.ts",
+    "migrate": "npm run typeorm migration:run",
+    "revert": "npm run typeorm migration:revert"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^22.2.0",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.5.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.24"
+  }
+}
