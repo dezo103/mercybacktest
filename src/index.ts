@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
   const fakeNewsData = [
     { id: 1, title: 'New technology revolutionizes the world', content: 'Content of the article here' },
     { id: 2, title: 'Stock market trends 2025', content: 'Stock market prediction for 2025' },
-    { id: 3, title: 'The future of artificial intelligence', content: 'AI will shape the next decade' }
+    { id: 3, title: 'The future of artificial intellince', content: 'AI will shape the next decade' }
   ];
   res.json(fakeNewsData); // Отправляем статический массив данных
 });
