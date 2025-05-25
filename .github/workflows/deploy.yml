@@ -23,8 +23,18 @@ jobs:
       - name: Build (если используется сборка, например, TypeScript/Babel)
         run: npm run build # Если есть скрипт build в package.json
 
-#      - name: Run tests (опционально)
-#        run: npm test # Если есть тесты
+
+      #      - name: Run tests (опционально)
+      #        run: npm test # Если есть тесты
+
+
+      # Установка и использование ssh-agent для ключа с паролем
+      - name: Set up SSH agent
+        run: |
+          eval $(ssh-agent -s)
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       # Деплой (зависит от вашего сервера)
       - name: Deploy to server via SSH
@@ -39,3 +49,6 @@ jobs:
             git pull origin main
 #            npm install --production
 #            pm2 restart my-app # Если используете PM2
+
+
+
