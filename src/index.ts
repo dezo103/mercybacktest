@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import newsRoutes from './routes/newsRoutes';
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 app.use('/news', newsRoutes);
 
 // Создаем фейковый маршрут, который просто возвращает данные
-app.get('/news', (req, res) => {
+app.get('/', (req, res) => {
   const fakeNewsData = [
     { id: 1, title: 'New technology revolutionizes the world', content: 'Content of the article here' },
     { id: 2, title: 'Stock market trends 2025', content: 'Stock market prediction for 2025' },
