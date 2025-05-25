@@ -1,0 +1,40 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [ "main" ] # Триггер на push в ветку main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Используем Ubuntu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Укажите нужную версию Node.js
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build (если используется сборка, например, TypeScript/Babel)
+        run: npm run build # Если есть скрипт build в package.json
+
+      - name: Run tests (опционально)
+        run: npm test # Если есть тесты
+
+      # Деплой (зависит от вашего сервера)
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/my-express-app
+            git pull origin main
+            npm install --production
+            pm2 restart my-app # Если используете PM2
