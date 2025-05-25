@@ -23,27 +23,29 @@ jobs:
       - name: Build (если используется сборка, например, TypeScript/Babel)
         run: npm run build # Если есть скрипт build в package.json
 
-
       #      - name: Run tests (опционально)
       #        run: npm test # Если есть тесты
 
-
-      # Дешифровка приватного ключа
-      - name: Decrypt SSH key
+      # Шаг для настройки SSH-ключа с паролем
+      - name: Set up SSH key with passphrase
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Установка ssh-agent и добавление ключа
-      - name: Set up SSH agent
-        run: |
+          # Создаем файл для автоматического ввода пароля
+          echo -e "#!/bin/bash\n\necho $SSH_PASSPHRASE" > ~/.ssh/askpass.sh
+          chmod +x ~/.ssh/askpass.sh
+
+          # Устанавливаем переменную окружения SSH_ASKPASS
+          export SSH_ASKPASS=~/.ssh/askpass.sh
+
+          # Запускаем ssh-agent и добавляем ключ
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Настройка для игнорирования предупреждений о недоверенных хостах
+          mkdir -p ~/.ssh
+          echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile /dev/null" > ~/.ssh/config
 
       # Деплой (зависит от вашего сервера)
       - name: Deploy to server via SSH
