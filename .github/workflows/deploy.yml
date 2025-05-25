@@ -31,6 +31,7 @@ jobs:
       # Дешифровка приватного ключа
       - name: Decrypt SSH key
         run: |
+          mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" | base64 --decode > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
         env:
